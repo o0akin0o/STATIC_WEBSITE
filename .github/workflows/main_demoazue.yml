@@ -9,9 +9,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write        # 👈 THÊM dòng này để dùng OIDC login
-      contents: read
 
     steps:
       - name: Checkout code
@@ -20,16 +17,10 @@ jobs:
       - name: Zip files for deployment
         run: zip -r release.zip ./*
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_50C4C6B9062A46F0817EEEB69D34FEE4 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0CA2F4EAB1B84C1B97852868082156E2 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8D83EC7F5CF74B6E88EBE5692A7F94D2 }}
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'demoazue'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: release.zip
