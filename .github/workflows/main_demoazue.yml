@@ -10,6 +10,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
+      id-token: write        # 👈 THÊM dòng này để dùng OIDC login
       contents: read
 
     steps:
